@@ -10,7 +10,7 @@
     </parent>
     <groupId>top.archer</groupId>
     <artifactId>instagdm</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.5</version>
     <name>instagdm</name>
     <description>instagdm</description>
     <properties>
@@ -84,9 +84,8 @@
                     </imageTags>
                     <forceTags>true</forceTags>
                     <dockerDirectory>src/main/docker</dockerDirectory>
-<!--                    <dockerHost>https://mail.archer.top:2375</dockerHost>-->
-<!--                    <dockerCertPath>/Users/archer/Desktop/client-ca</dockerCertPath>-->
-                    <dockerHost>http://212.50.251.46:2375</dockerHost>
+                    <dockerHost>https://mail.archer.top:2375</dockerHost>
+                    <dockerCertPath>/Users/archer/Desktop/client-ca</dockerCertPath>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>

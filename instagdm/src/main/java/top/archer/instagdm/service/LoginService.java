@@ -1,52 +1,44 @@
 package top.archer.instagdm.service;
 
 import com.github.instagram4j.instagram4j.IGClient;
-import kotlin.collections.ArrayDeque;
+import com.github.instagram4j.instagram4j.utils.IGUtils;
+import okhttp3.OkHttpClient;
 import org.springframework.stereotype.Service;
-import top.archer.instagdm.request.DirectCreateGroupThreadRequest;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class LoginService {
 
+    private final Map<String, IGClient> clientCache = new ConcurrentHashMap<>();
+
+    private static final Proxy PROXY = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("43.137.8.86", 8123));
+
     public Optional<IGClient> login(String username, String passwd) {
         try {
-            return Optional.of(IGClient.builder().username(username).password(passwd).login());
+            IGClient client = null;
+            if ((client = clientCache.get(username + passwd)) != null) {
+                return Optional.of(client);
+            }
+            client = IGClient.builder().username(username).password(passwd)
+                    .client(okHttpClientWithProxy())
+                    .login();
+            if (client != null) {
+                clientCache.put(username + passwd, client);
+            }
+            return Optional.ofNullable(client);
         } catch (Exception ignored) {
             return Optional.empty();
         }
     }
 
-    public static void main(String[] args) {
-        LoginService loginService = new LoginService();
-        Optional<IGClient> opClient = loginService.login("archervanderwaal", "ArcherVanderWaal0221@");
-        assert opClient.isPresent();
-        List<String> userNames = new ArrayDeque<>();
-        userNames.add("1231.nico");
-        userNames.add("candydiamondx");
-        userNames.add("xaviiii49");
-        List<String> userIds = new ArrayList<>();
-        userNames.forEach(uName ->
-                {
-                    try {
-                        userIds.add(String.valueOf(opClient.get().actions().users().findByUsername(uName).get().getUser().getPk()));
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    } catch (ExecutionException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-        );
-        System.out.println(userIds);
-        String[] res = userIds.toArray(new String[0]);
-        new DirectCreateGroupThreadRequest("Happy", res).execute(opClient.get()).thenAccept(r -> {
-            System.out.println(1);
-            //thread_v2_id -> 17998780415465410
-            //joinable_group_link -> https://ig.me/j/AbZKLrhFQmDOBxIM/
-        }).join();
+    private static OkHttpClient okHttpClientWithProxy() {
+        return IGUtils.defaultHttpClientBuilder()
+                .proxy(PROXY)
+                .build();
     }
 }

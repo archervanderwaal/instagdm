@@ -3,13 +3,13 @@ package top.archer.instagdm.request;
 import com.github.instagram4j.instagram4j.IGClient;
 import com.github.instagram4j.instagram4j.models.IGPayload;
 import com.github.instagram4j.instagram4j.requests.IGPostRequest;
-import com.github.instagram4j.instagram4j.responses.IGResponse;
 import com.github.instagram4j.instagram4j.utils.IGUtils;
 import lombok.Data;
+import top.archer.instagdm.response.CreateGroupThreadsResponse;
 
 import java.util.Arrays;
 
-public class DirectCreateGroupThreadRequest extends IGPostRequest<IGResponse> {
+public class DirectCreateGroupThreadRequest extends IGPostRequest<CreateGroupThreadsResponse> {
     private final String title;
     private final String[] userIds;
 
@@ -29,8 +29,8 @@ public class DirectCreateGroupThreadRequest extends IGPostRequest<IGResponse> {
     }
 
     @Override
-    public Class<IGResponse> getResponseType() {
-        return IGResponse.class;
+    public Class<CreateGroupThreadsResponse> getResponseType() {
+        return CreateGroupThreadsResponse.class;
     }
 
     @Data

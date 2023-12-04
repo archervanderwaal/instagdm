@@ -45,7 +45,7 @@ public class DirectMessageService {
             client.sendRequest(new DirectThreadsBroadcastRequest(new DirectThreadsBroadcastRequest.BroadcastTextPayload(
                     message, userIds.stream().mapToLong(t -> t).toArray()
             )));
-        }).join();
+        });
     }
 
     private void sendMessageToThreads(IGClient client, List<String> threadIds, String message) {
