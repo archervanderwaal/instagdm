@@ -9,5 +9,4 @@ class InstagdmApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }

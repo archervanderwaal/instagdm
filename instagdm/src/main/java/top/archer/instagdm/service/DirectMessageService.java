@@ -2,6 +2,7 @@ package top.archer.instagdm.service;
 
 import com.github.instagram4j.instagram4j.IGClient;
 import com.github.instagram4j.instagram4j.requests.direct.DirectThreadsBroadcastRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -13,6 +14,7 @@ import top.archer.instagdm.result.ResultBuilder;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class DirectMessageService {
 
@@ -29,6 +31,7 @@ public class DirectMessageService {
         }
         Optional<IGClient> opClient = loginService.login(messageDTO.getUsername(), messageDTO.getPassword());
         if (opClient.isEmpty()) {
+            log.error("[requests] sendDirectMessage failed: 登录失败");
             return ResultBuilder.fail("登录Ins失败, 请检查用户名密码是否正确");
         }
         if (!CollectionUtils.isEmpty(messageDTO.getReceivers())) {
@@ -44,14 +47,14 @@ public class DirectMessageService {
         apiService.queryUserIds(client, receivers).thenAccept(userIds -> {
             client.sendRequest(new DirectThreadsBroadcastRequest(new DirectThreadsBroadcastRequest.BroadcastTextPayload(
                     message, userIds.stream().mapToLong(t -> t).toArray()
-            )));
+            ))).thenAccept(r -> log.info("[requests] sendMessageToUsers status: {}, message:{}", r.getStatus(), message));
         });
     }
 
     private void sendMessageToThreads(IGClient client, List<String> threadIds, String message) {
         client.sendRequest(new DirectThreadsBroadcastRequest(new DirectThreadsBroadcastRequest.BroadcastTextPayload(
                 message, threadIds.toArray(new String[0])
-        )));
+        ))).thenAccept(r -> log.info("[requests] sendMessageToThreads status: {}, message:{}", r.getStatus(), message));
     }
 
     private static Result<String> checkDTO(DirectMessageDTO messageDTO) {

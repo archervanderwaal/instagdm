@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const service = axios.create({
-  baseURL: "https://api.archer.top/api/ins", // API的基础路径
+  baseURL: "http://localhost:8080/api", // API的基础路径
   timeout: 100000, // 请求超时时间
 });
 

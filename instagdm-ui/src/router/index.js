@@ -39,6 +39,12 @@ export const asyncRoutes = {
     meta: { title: "Ins创建群组" },
     component: () => import("../views/ThreadsCreate.vue"),
   },
+  listThreads: {
+    path: "listThreads",
+    name: "listThreads",
+    meta: { title: "群组列表" },
+    component: () => import("../views/Threads.vue"),
+  },
 };
 
 const createRouter = () =>

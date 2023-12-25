@@ -1,44 +1,52 @@
 package top.archer.instagdm.service;
 
 import com.github.instagram4j.instagram4j.IGClient;
-import com.github.instagram4j.instagram4j.utils.IGUtils;
-import okhttp3.OkHttpClient;
+import com.github.instagram4j.instagram4j.utils.SerializableCookieJar;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import top.archer.instagdm.mapper.InsClientMapper;
 
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Service
+@SuppressWarnings("all")
 public class LoginService {
 
-    private final Map<String, IGClient> clientCache = new ConcurrentHashMap<>();
+    @Autowired
+    private InsClientMapper clientMapper;
 
-    private static final Proxy PROXY = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("43.137.8.86", 8123));
+    @Autowired
+    private OkHttpClientService okHttpClientService;
+
+    @Autowired
+    private IGSerializeService serializeService;
+
+    private static final Cache<String, IGClient> cache = CacheBuilder.newBuilder()
+            .maximumSize(100000)
+            .expireAfterAccess(1, TimeUnit.DAYS)
+            .build();
 
     public Optional<IGClient> login(String username, String passwd) {
         try {
-            IGClient client = null;
-            if ((client = clientCache.get(username + passwd)) != null) {
-                return Optional.of(client);
+            String cacheKey = generateCacheKey(username, passwd);
+            IGClient ig;
+            if ((ig = cache.getIfPresent(cacheKey)) != null) {
+                return Optional.of(ig);
             }
-            client = IGClient.builder().username(username).password(passwd)
-                    .client(okHttpClientWithProxy())
+            ig = IGClient.builder().username(username).password(passwd)
+                    .client(okHttpClientService.createOkHttpClient(new SerializableCookieJar()))
                     .login();
-            if (client != null) {
-                clientCache.put(username + passwd, client);
-            }
-            return Optional.ofNullable(client);
+            cache.put(cacheKey, ig);
+            return Optional.ofNullable(ig);
         } catch (Exception ignored) {
             return Optional.empty();
         }
     }
 
-    private static OkHttpClient okHttpClientWithProxy() {
-        return IGUtils.defaultHttpClientBuilder()
-                .proxy(PROXY)
-                .build();
+    private static String generateCacheKey(String username, String password) {
+        return String.join("$", username, password);
     }
 }
