@@ -29,8 +29,20 @@ const store = new Vuex.Store({
       {
         name: "listThreads",
         size: 18,
-        type: "ios-create",
-        text: "群组列表",
+        type: "ios-arrow-forward",
+        text: "Ins群组列表",
+      },
+      {
+        name: "collectFollowers",
+        size: 18,
+        type: "ios-build-outline",
+        text: "Ins粉丝采集",
+      },
+      {
+        name: "listFollowers",
+        size: 18,
+        type: "ios-book-outline",
+        text: "Ins粉丝列表",
       },
     ],
   },

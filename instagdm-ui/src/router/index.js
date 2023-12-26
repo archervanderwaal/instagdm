@@ -42,8 +42,20 @@ export const asyncRoutes = {
   listThreads: {
     path: "listThreads",
     name: "listThreads",
-    meta: { title: "群组列表" },
+    meta: { title: "Ins群组列表" },
     component: () => import("../views/Threads.vue"),
+  },
+  collectFollowers: {
+    path: "collectFollowers",
+    name: "collectFollowers",
+    meta: { title: "Ins粉丝采集" },
+    component: () => import("../views/Collect.vue"),
+  },
+  listFollowers: {
+    path: "listFollowers",
+    name: "listFollowers",
+    meta: { title: "Ins粉丝列表" },
+    component: () => import("../views/Followers.vue"),
   },
 };
 

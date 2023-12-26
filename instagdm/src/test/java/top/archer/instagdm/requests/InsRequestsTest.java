@@ -6,8 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import top.archer.instagdm.service.IGSerializeService;
 import top.archer.instagdm.service.LoginService;
 
-import java.util.Optional;
-
 @SpringBootTest
 public class InsRequestsTest {
 
