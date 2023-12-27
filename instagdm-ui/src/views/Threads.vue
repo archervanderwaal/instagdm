@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="threadsList" height="250" border style="width: 100%">
+  <el-table :data="threadsList" height="250" border style="width: 80%">
     <el-table-column prop="threadId" label="群组id" width="180"> </el-table-column>
     <el-table-column prop="threadTitle" label="群组名称" width="180"> </el-table-column>
     <el-table-column prop="invitationLink" label="邀请链接"> </el-table-column>

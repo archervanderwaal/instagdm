@@ -19,7 +19,7 @@ public class WeiboController {
 
     @GetMapping(value = "/task")
     public Result<String> startTask() {
-        weiboTask.startTask();
+        // weiboTask.startTask();
         return ResultBuilder.success("提交成功");
     }
 }

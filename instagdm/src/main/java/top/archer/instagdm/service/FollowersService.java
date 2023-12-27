@@ -61,7 +61,7 @@ public class FollowersService {
 
     private void saveToMysql(List<InsFollowers> followers) {
         if (!CollectionUtils.isEmpty(followers)) {
-            followersMapper.batchInsert(followers);
+            followers.forEach(followersMapper::insert);
         }
     }
 }

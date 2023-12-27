@@ -14,6 +14,7 @@ import top.archer.instagdm.limiter.InsReqLimiter;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @SuppressWarnings("all")
@@ -39,6 +40,10 @@ public class OkHttpClientService {
                 .cookieJar(cookieJar)
                 .proxy(PROXY)
                 .addInterceptor(interceptor)
+                .retryOnConnectionFailure(true)
+                .connectTimeout(120, TimeUnit.SECONDS)
+                .readTimeout(120, TimeUnit.SECONDS)
+                .writeTimeout(240, TimeUnit.SECONDS)
                 .build();
     }
 }

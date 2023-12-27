@@ -29,8 +29,7 @@ public class InsReqLimiter {
         if (limiter != null) {
             return limiter;
         }
-        // 5s一次请求, 防止被ins风控
-        limiter = RateLimiter.create(0.2);
+        limiter = RateLimiter.create(0.5);
         cache.put(username, limiter);
         return limiter;
     }
