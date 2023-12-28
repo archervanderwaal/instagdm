@@ -29,7 +29,7 @@ public class InsReqLimiter {
         if (limiter != null) {
             return limiter;
         }
-        limiter = RateLimiter.create(0.5);
+        limiter = RateLimiter.create(0.2);
         cache.put(username, limiter);
         return limiter;
     }
